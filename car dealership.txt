@@ -1,0 +1,119 @@
+CREATE TABLE ΠΕΛΑΤΗΣ (
+  ID INTEGER  NOT NULL  ,
+  ΕΠΩΝΥΜΟ VARCHAR(20)    ,
+  ΟΝΟΜΑ VARCHAR(20)    ,
+  ΠΟΛΗ VARCHAR(20)    ,
+  Τ_Κ VARCHAR(20)    ,
+  ΟΔΟΣ VARCHAR(20)    ,
+  ΑΡΙΘΜΟΣ VARCHAR(20)    ,
+  ΤΗΛΕΦΩΝΟ VARCHAR(20)      ,
+PRIMARY KEY(ID));
+
+
+
+CREATE TABLE ΠΩΛΗΤΗΣ (
+  ID INTEGER  NOT NULL  ,
+  ΕΠΩΝΥΜΟ VARCHAR(20)  NOT NULL  ,
+  ΟΝΟΜΑ VARCHAR(20)  NOT NULL    ,
+PRIMARY KEY(ID));
+
+
+
+CREATE TABLE ΤΙΜΟΛΟΓΙΟ (
+  ΠΩΛΗΤΗΣ_ID INTEGER  NOT NULL  ,
+  ΠΕΛΑΤΗΣ_ID INTEGER  NOT NULL  ,
+  ΚΩΔΙΚΟ VARCHAR(20)    ,
+  ΗΜ_ΕΚΔΟΣΗΣ DATETIME    ,
+  ΣΥΝ_ΑΞΙΑ VARCHAR(20)        ,
+  FOREIGN KEY(ΠΕΛΑΤΗΣ_ID)
+    REFERENCES ΠΕΛΑΤΗΣ(ID)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION,
+  FOREIGN KEY(ΠΩΛΗΤΗΣ_ID)
+    REFERENCES ΠΩΛΗΤΗΣ(ID)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION);
+
+
+CREATE INDEX Table_08_FKIndex1 ON ΤΙΜΟΛΟΓΙΟ (ΠΕΛΑΤΗΣ_ID);
+CREATE INDEX Table_08_FKIndex2 ON ΤΙΜΟΛΟΓΙΟ (ΠΩΛΗΤΗΣ_ID);
+
+
+
+CREATE TABLE ΑΥΤΟΚΙΝΗΤΟ (
+  ID INTEGER  NOT NULL  ,
+  ΠΩΛΗΤΗΣ_ID INTEGER  NOT NULL  ,
+  ΠΕΛΑΤΗΣ_ID INTEGER  NOT NULL  ,
+  ΕΤΟΣ_ΚΑΤΑΣΚΕΥΗΣ YEAR    ,
+  ΣΕΙΡ_ΑΡ VARCHAR(20)    ,
+  ΜΟΝΤΕΛΟ VARCHAR(30)    ,
+  ΧΡΩΜΑ VARCHAR(30)    ,
+  Υ_Ή_Ν BOOL    ,
+  ΚΑΤΑΣΚΕΥΑΣΤΗΣ VARCHAR(20)    ,
+  Κ_Ή_Μ BOOL      ,
+PRIMARY KEY(ID)    ,
+  FOREIGN KEY(ΠΕΛΑΤΗΣ_ID)
+    REFERENCES ΠΕΛΑΤΗΣ(ID)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION,
+  FOREIGN KEY(ΠΩΛΗΤΗΣ_ID)
+    REFERENCES ΠΩΛΗΤΗΣ(ID)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION);
+
+
+CREATE INDEX ΑΥΤΟΚΙΝΗΤΟ_FKIndex1 ON ΑΥΤΟΚΙΝΗΤΟ (ΠΕΛΑΤΗΣ_ID);
+CREATE INDEX ΑΥΤΟΚΙΝΗΤΟ_FKIndex2 ON ΑΥΤΟΚΙΝΗΤΟ (ΠΩΛΗΤΗΣ_ID);
+
+
+
+CREATE TABLE ΕΠΙΣΚΕΥΑΖΕΙ (
+  ΑΥΤΟΚΙΝΗΤΟ_ID INTEGER  NOT NULL    ,
+PRIMARY KEY(ΑΥΤΟΚΙΝΗΤΟ_ID)  ,
+  FOREIGN KEY(ΑΥΤΟΚΙΝΗΤΟ_ID)
+    REFERENCES ΑΥΤΟΚΙΝΗΤΟ(ID)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION);
+
+
+CREATE INDEX ΑΥΤΟΚΙΝΗΤΟ_has_ΜΗΧΑΝΙΚΟΣ_FKIndex1 ON ΕΠΙΣΚΕΥΑΖΕΙ (ΑΥΤΟΚΙΝΗΤΟ_ID);
+
+
+
+CREATE TABLE ΜΗΧΑΝΙΚΟΣ (
+  ΕΠΙΣΚΕΥΑΖΕΙ_ΑΥΤΟΚΙΝΗΤΟ_ID INTEGER  NOT NULL  ,
+  ID VARCHAR(20)  NOT NULL  ,
+  ΟΝΟΜΑ VARCHAR(20)    ,
+  ΕΠΩΝΥΜΟ VARCHAR(20)    ,
+  ΣΧΟΛΙΑ VARCHAR(200)    ,
+  ΩΡ_ΕΡΓΑΣΙΑΣ VARCHAR(20)      ,
+  FOREIGN KEY(ΕΠΙΣΚΕΥΑΖΕΙ_ΑΥΤΟΚΙΝΗΤΟ_ID)
+    REFERENCES ΕΠΙΣΚΕΥΑΖΕΙ(ΑΥΤΟΚΙΝΗΤΟ_ID)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION);
+
+
+CREATE INDEX ΜΗΧΑΝΙΚΟΣ_FKIndex1 ON ΜΗΧΑΝΙΚΟΣ (ΕΠΙΣΚΕΥΑΖΕΙ_ΑΥΤΟΚΙΝΗΤΟ_ID);
+
+
+
+CREATE TABLE ΕΙΣΗΤΗΡΙΟ_ΕΠΙΣΚΕΥΗΣ (
+  ΚΩΔΙΚΟ INTEGER  NOT NULL  ,
+  ΕΠΙΣΚΕΥΑΖΕΙ_ΑΥΤΟΚΙΝΗΤΟ_ID INTEGER  NOT NULL  ,
+  ΗΜ_ΕΙΣ DATETIME    ,
+  ΗΜ_ΠΑΡ DATETIME    ,
+  ΣΧΟΛΙΑ VARCHAR(255)    ,
+  ΚΟΣΤΟΣ VARCHAR(20)      ,
+PRIMARY KEY(ΚΩΔΙΚΟ)  ,
+  FOREIGN KEY(ΕΠΙΣΚΕΥΑΖΕΙ_ΑΥΤΟΚΙΝΗΤΟ_ID)
+    REFERENCES ΕΠΙΣΚΕΥΑΖΕΙ(ΑΥΤΟΚΙΝΗΤΟ_ID)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION);
+
+
+CREATE INDEX ΕΙΣΗΤΗΡΙΟ_ΕΠΙΣΚΕΥΗΣ_FKIndex1 ON ΕΙΣΗΤΗΡΙΟ_ΕΠΙΣΚΕΥΗΣ (ΕΠΙΣΚΕΥΑΖΕΙ_ΑΥΤΟΚΙΝΗΤΟ_ID);
+
+
+
+
+
